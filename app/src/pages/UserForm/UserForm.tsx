@@ -6,12 +6,14 @@ import {IForm, LoginResponse} from "./types";
 import Input from "../../components/Input/Input";
 import {useHttp} from "../../hooks/useHttp";
 import {useAuthContext} from "../../context/AuthProvider";
+import {useHistory} from "react-router-dom";
 
 
 const UserForm = () => {
     const classes = useStyles()
     const {request} = useHttp()
     const [typeButton, setTypeButton] = useState('')
+    const history = useHistory()
     const {handleSubmit, control} = useForm<IForm>({
         defaultValues: {
             email: '',

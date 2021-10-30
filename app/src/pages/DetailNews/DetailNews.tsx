@@ -7,10 +7,10 @@ import {ILists} from "../../App";
 
 
 const DetailNews = () => {
-    const params = useParams<{id:string}>().id
+    const params = useParams<{id:string}>()
     //@ts-ignore
     const {lists} = useAuthContext()
-    const details = lists.find((item:ILists) => item.id.toString() === params)
+    const details = lists.find((item:ILists) => item.id.toString() === params.id)
     return (
         <Layout>
             <Box component={'h1'}>

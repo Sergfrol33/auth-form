@@ -1,5 +1,5 @@
 import React, {FC, useEffect} from "react";
-import {Switch, Route, useHistory} from "react-router-dom";
+import {Switch, Route, useHistory, Redirect} from "react-router-dom";
 import Home from "../../pages/Home/Home";
 import UserForm from "../../pages/UserForm";
 import News from "../../pages/News/News";
@@ -11,27 +11,17 @@ interface Props {
 }
 
 const Routes: FC<Props> = (props): JSX.Element => {
-    const history = useHistory()
-    useEffect(() => {
-        if (props.isAuth) history.push('/')
-    }, [props.isAuth,history])
     return (
         <Switch>
-            <Route path={'/'} exact>
-                <CheckAuth isAuth={props.isAuth}>
+            <CheckAuth isAuth={props.isAuth} path={'/'} exact>
                     <Home/>
-                </CheckAuth>
-            </Route>
-            <Route path={'/news'} exact>
-                <CheckAuth isAuth={props.isAuth}>
-                    <News/>
-                </CheckAuth>
-            </Route>
-            <Route path={'/news/:id'} exact>
-                <CheckAuth isAuth={props.isAuth}>
-                    <DetailNews/>
-                </CheckAuth>
-            </Route>
+            </CheckAuth>
+            <CheckAuth isAuth={props.isAuth} path={'/news'} exact>
+                <News/>
+            </CheckAuth>
+            <CheckAuth isAuth={props.isAuth} path={'/news/:id'} exact>
+                <DetailNews/>
+            </CheckAuth>
             <Route path={'/form'} exact>
                 <UserForm/>
             </Route>
