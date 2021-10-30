@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {MouseEvent, useState} from 'react';
 import {Box, Button, Grid, InputLabel, Typography} from "@material-ui/core";
 import useStyles from "./style";
 import {useForm, SubmitHandler, Controller} from "react-hook-form";
@@ -10,19 +10,34 @@ import {useHttp} from "../../hooks/useHttp";
 const UserForm = () => {
     const classes = useStyles()
     const {loading, error, request} = useHttp()
-
+    const [typeButton, setTypeButton] = useState('')
     const {handleSubmit, control} = useForm<IForm>({
         defaultValues: {
             email: '',
             password: ''
         }
     })
-    const onSubmit: SubmitHandler<IForm> = async (formData) => {
+    const register = async (data: IForm) => {
         try {
-            const data = await request('/auth/register', 'POST', {...formData})
+           const response = await request('/auth/register', 'POST', {...data})
         } catch (e) {
+
         }
     }
+    const login = async (data: IForm) => {
+        try {
+            const response = await request('/auth/login', 'POST', {...data})
+            localStorage.setItem('token', response.token)
+        } catch (e) {
+
+        }
+    }
+    const getTypeButton = (e:MouseEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLElement
+        setTypeButton(target.innerText.toLowerCase())
+    }
+    const onSubmit: SubmitHandler<IForm> = (formData) =>
+        typeButton === 'регистрация' ? register(formData) : login(formData)
     return (
         <Grid container className={classes.wrapper}>
             <Box component={'form'} onSubmit={handleSubmit(onSubmit)} className={classes.form}>
@@ -47,7 +62,8 @@ const UserForm = () => {
 
                         </Grid>
                     </Box>
-                    <Grid item className={classes.button}>
+
+                    <Grid item className={classes.button} onClick={getTypeButton}>
                         <Button type={'submit'} variant={'contained'}>Регистрация</Button>
                         <Button type={'submit'} variant={'contained'}>Авторизация</Button>
                     </Grid>

@@ -6,8 +6,7 @@ const authRouter = Router()
 
 authRouter.post('/register', [
     check('email', 'Некорректный email').isEmail(),
-    check('password', 'Минимальная пароля 6 символов').isLength({min: 6})
-
+    check('password', 'Минимальная длина пароля 6 символов').isLength({min: 6})
 ], register)
 authRouter.post('/login', [
     check('email', 'Введите корректный email').normalizeEmail().isEmail(),
