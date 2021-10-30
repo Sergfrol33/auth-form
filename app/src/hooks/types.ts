@@ -4,6 +4,9 @@ export interface IUseHttp {
     error: string | null
 }
 
-export interface IRequest{
-
+export interface IAuth {
+    login?: (jwtToken:string,id:string) => void
+    logout?: () => void
+    token?: string | null
+    userId?: string | null
 }

@@ -2,14 +2,15 @@ import React, {MouseEvent, useState} from 'react';
 import {Box, Button, Grid, InputLabel, Typography} from "@material-ui/core";
 import useStyles from "./style";
 import {useForm, SubmitHandler, Controller} from "react-hook-form";
-import {IForm} from "./types";
+import {IForm, LoginResponse} from "./types";
 import Input from "../../components/Input/Input";
 import {useHttp} from "../../hooks/useHttp";
+import {useAuthContext} from "../../context/AuthProvider";
 
 
 const UserForm = () => {
     const classes = useStyles()
-    const {loading, error, request} = useHttp()
+    const {request} = useHttp()
     const [typeButton, setTypeButton] = useState('')
     const {handleSubmit, control} = useForm<IForm>({
         defaultValues: {
@@ -17,27 +18,29 @@ const UserForm = () => {
             password: ''
         }
     })
-    const register = async (data: IForm) => {
+    const auth = useAuthContext()
+    const registerHandler = async (data: IForm) => {
         try {
-           const response = await request('/auth/register', 'POST', {...data})
+            await request('/auth/register', 'POST', {...data})
         } catch (e) {
 
         }
     }
-    const login = async (data: IForm) => {
+    const loginHandler = async (data: IForm) => {
         try {
-            const response = await request('/auth/login', 'POST', {...data})
-            localStorage.setItem('token', response.token)
+            const response: LoginResponse = await request('/auth/login', 'POST', {...data})
+            //@ts-ignore
+            auth.login(response.token, response.userId)
         } catch (e) {
 
         }
     }
-    const getTypeButton = (e:MouseEvent<HTMLDivElement>) => {
+    const getTypeButton = (e: MouseEvent<HTMLDivElement>) => {
         const target = e.target as HTMLElement
         setTypeButton(target.innerText.toLowerCase())
     }
     const onSubmit: SubmitHandler<IForm> = (formData) =>
-        typeButton === 'регистрация' ? register(formData) : login(formData)
+        typeButton === 'регистрация' ? registerHandler(formData) : loginHandler(formData)
     return (
         <Grid container className={classes.wrapper}>
             <Box component={'form'} onSubmit={handleSubmit(onSubmit)} className={classes.form}>

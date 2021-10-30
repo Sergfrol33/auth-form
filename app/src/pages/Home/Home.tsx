@@ -1,10 +1,14 @@
 import React from 'react';
+import Layout from "../../components/Layout/Layout";
+import {Container} from "@material-ui/core";
 
 const Home = () => {
     return (
-        <div>
-          text
-        </div>
+       <Layout>
+           <Container maxWidth={'lg'}>
+               Home Page
+           </Container>
+       </Layout>
     );
 };
 

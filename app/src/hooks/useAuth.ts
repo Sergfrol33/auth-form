@@ -1,20 +1,28 @@
-import {useState,useCallback} from "react";
+import {useState, useCallback, useEffect} from "react";
+import {IAuth} from "./types";
 
 const storageToken = 'token'
-const storageUserId = 'userId'
-const useAuth = () => {
-    const [token,setToken] = useState<string>('')
-    const [userId,setUserId] = useState<string>('')
+
+const useAuth = ():IAuth => {
+    const [token,setToken] = useState<string | null>(null)
+    const [userId,setUserId] = useState<string | null>(null)
     const login = useCallback((jwtToken:string,id:string) => {
-        setToken(token)
+        setToken(jwtToken)
         setUserId(id)
-        localStorage.setItem(storageToken,token)
-        localStorage.setItem(storageUserId,userId)
+        localStorage.setItem(storageToken,JSON.stringify({token: jwtToken,userId: id}))
     },[])
     const logout = useCallback(() => {
-
+        setToken(null)
+        setUserId(null)
+        localStorage.removeItem(storageToken)
     },[])
-    return {login,logout}
+    useEffect(() => {
+        const data = JSON.parse(localStorage.getItem(storageToken) as string)
+        if (data && data.token){
+            login(data.token, data.userId)
+        }
+    },[login])
+    return {login,logout,token,userId}
 }
 
 export default useAuth
