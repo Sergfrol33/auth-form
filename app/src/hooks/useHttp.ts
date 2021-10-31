@@ -27,6 +27,6 @@ export const useHttp = (): IUseHttp => {
             throw e
         }
     }, [])
-    const clearError = () => setError(null)
+   //const clearError = () => setError(null)
     return {request, loading, error}
 }

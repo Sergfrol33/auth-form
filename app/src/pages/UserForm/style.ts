@@ -68,6 +68,9 @@ const useStyles = makeStyles({
         '100%':{
             transform: 'translateY(-3px)'
         }
+    },
+    inputError: {
+        border: '1px solid red'
     }
 })
 

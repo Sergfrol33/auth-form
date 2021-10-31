@@ -1,5 +1,5 @@
-import React, {FC, useEffect} from "react";
-import {Switch, Route, useHistory, Redirect} from "react-router-dom";
+import React, {FC} from "react";
+import {Switch, Route} from "react-router-dom";
 import Home from "../../pages/Home/Home";
 import UserForm from "../../pages/UserForm";
 import News from "../../pages/News/News";

@@ -6,19 +6,21 @@ import {IForm, LoginResponse} from "./types";
 import Input from "../../components/Input/Input";
 import {useHttp} from "../../hooks/useHttp";
 import {useAuthContext} from "../../context/AuthProvider";
-import {useHistory} from "react-router-dom";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
+import {yupResolver} from "@hookform/resolvers/yup";
+import schema from "./schema";
 
 
 const UserForm = () => {
     const classes = useStyles()
     const {request} = useHttp()
     const [typeButton, setTypeButton] = useState('')
-    const history = useHistory()
-    const {handleSubmit, control} = useForm<IForm>({
+    const {handleSubmit, control, formState:{errors}} = useForm<IForm>({
         defaultValues: {
             email: '',
             password: ''
-        }
+        },
+        resolver: yupResolver(schema)
     })
     const auth = useAuthContext()
     const registerHandler = async (data: IForm) => {
@@ -51,20 +53,30 @@ const UserForm = () => {
                     <Box>
                         <Grid item className={classes.item}>
                             <InputLabel className={classes.label} htmlFor={'login'}>Login</InputLabel>
-                            <Controller name={'email'} control={control} render={({field}) =>
+                            <Controller name={'email'}
+                                        control={control} render={({field}) =>
                                 <Input id={'login'} placeholder={'login'} {...field}/>
                             }/>
+                            <ErrorMessage errorType={!!errors?.email}>
+                                {errors?.email?.message}
+                            </ErrorMessage>
                         </Grid>
                         <Grid item className={classes.item}>
                             <InputLabel className={classes.label} htmlFor={'password'}>Password</InputLabel>
-                            <Controller name={'password'} control={control} render={({field}) =>
+                            <Controller name={'password'}
+                                        control={control} render={({field}) =>
                                 <Input id={'password'}
                                        placeholder={'Password'}
                                        type={'password'}
                                        {...field}
+                                        errorHandler={{
+                                            [classes.inputError]: errors?.password
+                                        }}
                                 />
                             }/>
-
+                            <ErrorMessage errorType={!!errors?.password}>
+                                {errors?.password?.message}
+                            </ErrorMessage>
                         </Grid>
                     </Box>
 
